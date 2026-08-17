@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import { AnimatePresence, LayoutGroup, motion, useMotionValue, useMotionTemplate } from 'framer-motion';
-import ClinicalMicroDemo from './ClinicalMicroDemo';
+import ProjectShowcase from './ProjectShowcase';
 
 type Category = 'Sistemas Complejos' | 'Presencia Digital' | 'Laboratorio de Código';
 
@@ -170,9 +170,9 @@ function ProjectCard({
               </div>
 
               {/* Zona Visual / Micro-Demo */}
-              <div className="min-h-[200px] rounded-2xl border border-white/10 bg-white/[0.04] p-5">
+              <div className="min-h-[200px] rounded-2xl border border-white/10 bg-white/[0.04] p-4">
                 {project.id === 'ecosistema-clinico' ? (
-                  <ClinicalMicroDemo />
+                  <ProjectShowcase />
                 ) : (
                   <div className="flex h-full items-center justify-center">
                     <span className="text-xs uppercase tracking-[0.2em] text-white/30">Micro-demo próximamente</span>
