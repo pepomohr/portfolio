@@ -14,6 +14,8 @@ interface Project {
   title: string;
   category: Category;
   variant: Variant;
+  description?: string;
+  stack?: string[];
 }
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -22,7 +24,15 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 // encaja cada tarjeta en la grilla (ver spanClasses) para que el Bento cierre sin huecos.
 const projects: Project[] = [
   // Sistemas Complejos
-  { id: 'ecosistema-clinico', title: 'Ecosistema Clínico (Sistema, E-commerce, App)', category: 'Sistemas Complejos', variant: 'featured' },
+  {
+    id: 'ecosistema-clinico',
+    title: 'Ecosistema Clínico',
+    category: 'Sistemas Complejos',
+    variant: 'featured',
+    description:
+      'Arquitectura integral de punta a punta. Incluye un sistema de gestión interno terminado, un e-commerce integrado que maneja picos de ventas, y una app móvil en desarrollo para la autogestión de turnos desde casa.',
+    stack: ['React', 'Next.js', 'Supabase', 'Tailwind'],
+  },
   { id: 'safety-dashboard', title: 'Safety Services (Dashboard & Portal)', category: 'Sistemas Complejos', variant: 'default' },
   { id: 'sistema-nutricion', title: 'Sistema de Nutrición (con lector de código de barras)', category: 'Sistemas Complejos', variant: 'default' },
   // Presencia Digital
@@ -47,16 +57,17 @@ const categoryAccent: Record<Category, string> = {
   'Laboratorio de Código': 'text-amber-300/70',
 };
 
-// Placeholder temporal — a futuro esto sale de la data de cada proyecto.
-const TECH_STACK = ['React', 'Next.js', 'Supabase', 'Tailwind'];
+// Placeholder temporal para los proyectos que todavía no tienen description/stack propios.
+const DEFAULT_DESCRIPTION = 'Resolución del problema y arquitectura.';
+const DEFAULT_STACK = ['React', 'Next.js', 'Supabase', 'Tailwind'];
 
 // El contenido tarda en aparecer (delay) hasta que la tarjeta casi terminó de
 // crecer (el layout dura 0.6s), para que no se sienta como que aparece "de golpe"
-// en medio de la expansión. Al cerrar, en cambio, desaparece rápido y sin delay.
+// en medio de la expansión. Al cerrar, sale rápido y hacia arriba.
 const expandedContentVariants = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE, delay: 0.3 } },
-  exit: { opacity: 0, y: 16, transition: { duration: 0.25, ease: EASE } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
 };
 
 function ProjectCard({
@@ -126,7 +137,10 @@ function ProjectCard({
           <h3 className="mt-auto text-xl font-medium text-white sm:text-2xl">{project.title}</h3>
         )}
 
-        <AnimatePresence>
+        {/* mode="popLayout": saca al elemento que sale del flujo (position: absolute)
+            para que su exit no compita con el layout (resize) del panel padre —
+            sin esto, el shrink de la tarjeta "gana" y el contenido corta de golpe. */}
+        <AnimatePresence mode="popLayout">
           {isExpanded && (
             <motion.div
               key="expanded-content"
@@ -140,10 +154,10 @@ function ProjectCard({
               <div className="flex flex-col">
                 <h3 className="text-2xl font-medium text-white sm:text-3xl">{project.title}</h3>
                 <p className="mt-4 max-w-md text-base leading-relaxed text-white/60 sm:text-lg">
-                  Resolución del problema y arquitectura.
+                  {project.description ?? DEFAULT_DESCRIPTION}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">
-                  {TECH_STACK.map((tech) => (
+                  {(project.stack ?? DEFAULT_STACK).map((tech) => (
                     <span
                       key={tech}
                       className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
