@@ -47,6 +47,18 @@ const categoryAccent: Record<Category, string> = {
   'Laboratorio de Código': 'text-amber-300/70',
 };
 
+// Placeholder temporal — a futuro esto sale de la data de cada proyecto.
+const TECH_STACK = ['React', 'Next.js', 'Supabase', 'Tailwind'];
+
+// El contenido tarda en aparecer (delay) hasta que la tarjeta casi terminó de
+// crecer (el layout dura 0.6s), para que no se sienta como que aparece "de golpe"
+// en medio de la expansión. Al cerrar, en cambio, desaparece rápido y sin delay.
+const expandedContentVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE, delay: 0.3 } },
+  exit: { opacity: 0, y: 16, transition: { duration: 0.25, ease: EASE } },
+};
+
 function ProjectCard({
   project,
   isExpanded,
@@ -90,49 +102,62 @@ function ProjectCard({
 
       <motion.div
         layout
-        className={`relative flex h-full w-full flex-col rounded-[calc(1.5rem-1px)] bg-[#111114] p-8 ${isExpanded ? 'min-h-[320px]' : 'min-h-[220px]'}`}
+        className={`relative flex h-full w-full flex-col rounded-[calc(1.5rem-1px)] bg-[#111114] p-8 ${isExpanded ? 'min-h-[460px]' : 'min-h-[220px]'}`}
       >
-        <div className="flex items-start justify-between">
-          <span className={`text-xs font-medium uppercase tracking-[0.2em] ${categoryAccent[project.category]}`}>
-            {project.category}
-          </span>
+        {isExpanded && (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle();
+            }}
+            aria-label="Cerrar"
+            className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/50 transition-colors hover:border-white/30 hover:text-white sm:right-8 sm:top-8"
+          >
+            ✕
+          </button>
+        )}
 
-          {isExpanded && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggle();
-              }}
-              aria-label="Cerrar"
-              className="text-white/40 transition-colors hover:text-white"
-            >
-              ✕
-            </button>
-          )}
-        </div>
+        <span className={`text-xs font-medium uppercase tracking-[0.2em] ${categoryAccent[project.category]}`}>
+          {project.category}
+        </span>
 
-        <h3
-          className={`font-medium text-white transition-[margin,font-size] duration-300 ${
-            isExpanded ? 'mt-6 text-3xl sm:text-4xl' : 'mt-auto text-xl sm:text-2xl'
-          }`}
-        >
-          {project.title}
-        </h3>
+        {!isExpanded && (
+          <h3 className="mt-auto text-xl font-medium text-white sm:text-2xl">{project.title}</h3>
+        )}
 
         <AnimatePresence>
           {isExpanded && (
             <motion.div
-              key="preview"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.4, ease: EASE }}
-              className="overflow-hidden"
+              key="expanded-content"
+              variants={expandedContentVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="mt-6 grid flex-1 grid-cols-1 gap-8 md:grid-cols-2"
             >
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/60 sm:text-lg">
-                Contenido del preview.
-              </p>
+              {/* Zona de Información */}
+              <div className="flex flex-col">
+                <h3 className="text-2xl font-medium text-white sm:text-3xl">{project.title}</h3>
+                <p className="mt-4 max-w-md text-base leading-relaxed text-white/60 sm:text-lg">
+                  Resolución del problema y arquitectura.
+                </p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {TECH_STACK.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Zona Visual / Micro-Demo: placeholder a completar más adelante */}
+              <div className="flex min-h-[200px] items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04]">
+                <span className="text-xs uppercase tracking-[0.2em] text-white/30">Micro-demo próximamente</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
