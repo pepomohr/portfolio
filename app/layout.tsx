@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import RainyWindow from '@/components/RainyWindow';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import './globals.css';
 
@@ -17,7 +18,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="es" className={`${inter.variable} h-full antialiased`}>
-      <body className="bg-noise flex min-h-full flex-col bg-[#0a0a0c] font-sans text-white">
+      <body className="flex min-h-full flex-col font-sans text-white">
+        <RainyWindow />
         <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
