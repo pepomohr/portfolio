@@ -54,8 +54,8 @@ class DustParticle {
   respawn() {
     this.x = Math.random() * this.bounds.width;
     this.y = Math.random() * this.bounds.height;
-    this.radius = 0.5 + Math.random() * 1; // ~1-3px de diámetro
-    this.opacity = 0.15 + Math.random() * 0.35;
+    this.radius = 0.6 + Math.random() * 1.4; // ~1.2-4px de diámetro
+    this.opacity = 0.35 + Math.random() * 0.45;
 
     // Movimiento senoidal con fase/frecuencia propias por partícula, para
     // que la deriva no se sienta lineal ni sincronizada entre partículas.
@@ -106,7 +106,7 @@ class DustParticle {
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
-    ctx.fillStyle = `rgba(200, 180, 150, ${this.opacity})`;
+    ctx.fillStyle = `rgba(180, 150, 100, ${this.opacity})`;
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
   }

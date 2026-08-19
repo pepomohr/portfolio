@@ -3,3 +3,34 @@
 @theme inline {
   --font-sans: var(--font-inter);
 }
+
+/* Modo claro: el resto de los componentes está hardcodeado en blanco
+   (pensado solo para el fondo oscuro), así que acá pisamos esos colores
+   de forma centralizada en vez de tocar dark:/light: variant por variant
+   en cada archivo. Mayor especificidad que un solo .text-white gracias al
+   selector de descendiente, así gana sin necesitar !important. */
+:root.light h1,
+:root.light h2,
+:root.light h3 {
+  color: #0f172a; /* slate-900 */
+}
+
+:root.light p {
+  color: #475569; /* slate-600 */
+}
+
+:root.light .text-white {
+  color: #0f172a; /* slate-900 */
+}
+
+:root.light .text-white\/70,
+:root.light .text-white\/60 {
+  color: #475569; /* slate-600 */
+}
+
+:root.light .text-white\/50,
+:root.light .text-white\/40,
+:root.light .text-white\/30,
+:root.light .text-white\/25 {
+  color: #64748b; /* slate-500, para la jerarquía más tenue */
+}

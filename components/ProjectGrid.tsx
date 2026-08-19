@@ -191,9 +191,12 @@ export default function ProjectGrid() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 py-24">
+    <section className="mx-auto w-full max-w-6xl px-6 pt-24 pb-48">
       <LayoutGroup>
-        <motion.div layout className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* grid-flow-dense: cuando una tarjeta del medio se expande a 2x2, deja que
+            las tarjetas más chicas que vienen después rellenen el hueco que queda
+            en vez de solo avanzar en orden — así no quedan huecos temporales. */}
+        <motion.div layout className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 grid-flow-dense">
           {projects.map((project) => (
             <ProjectCard
               key={project.id}
