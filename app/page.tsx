@@ -52,10 +52,16 @@ export default function Home() {
     <>
       <section
         ref={heroRef}
-        className="relative flex min-h-screen flex-col items-center overflow-hidden px-6 pt-28 text-center sm:pt-32"
+        className="relative flex min-h-screen flex-col items-center overflow-hidden px-6 pt-20 text-center sm:pt-24"
       >
-        {/* Capa de contenido (arriba de todo): título, subtítulo, CTA */}
-        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative z-20 flex flex-col items-center">
+        {/* Capa de contenido (arriba de todo, z-50): título, subtítulo, CTA.
+            En flujo normal (no absolute) para que la imagen de abajo NUNCA
+            pueda solaparla — son hermanos en el mismo flex-col, así que el
+            navegador los apila sin que dependa de calcular márgenes a mano. */}
+        <motion.div
+          style={{ opacity: heroOpacity, y: heroY }}
+          className="relative z-50 flex flex-col items-center"
+        >
           <motion.h1
             variants={titleContainer}
             initial="hidden"
@@ -84,29 +90,37 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Capa media: el render del escritorio, anclado abajo y centrado.
-            La capa de fondo (RainyWindow/DustyMorning vía BackgroundScene,
-            fixed en el layout raíz) queda detrás de esta sección porque no
-            tiene bg propio, y se filtra por el hueco transparente del
-            monitor gracias al canal alfa del PNG. Sin interactividad todavía
+        {/* Capa media (z-10): el render del escritorio. flex-1 + items-end
+            hace que este wrapper ocupe todo el espacio que sobra del Hero
+            (min-h-screen) DEBAJO del texto y empuje la imagen a su piso —
+            pegada abajo, pero sin poder invadir jamás el espacio del texto
+            de arriba porque es su hermano siguiente en el flujo, no un
+            elemento absolute flotando en una capa aparte. La capa de fondo
+            (RainyWindow/DustyMorning vía BackgroundScene, fixed en el layout
+            raíz, z -1) queda detrás porque esta sección no tiene bg propio,
+            y se filtra por el hueco transparente del monitor gracias al
+            canal alfa del PNG. Sin interactividad todavía
             (pointer-events-none) — eso viene en el próximo paso. */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center">
-          <div className="relative h-[48vh] w-full max-w-3xl sm:h-[58vh] lg:h-[70vh]">
-            <Image
-              src="/setup-pepo.png"
-              alt="Mi escritorio, visto desde atrás"
-              fill
-              priority
-              className="object-contain object-bottom"
-            />
-          </div>
+        <div className="pointer-events-none relative z-10 flex w-full flex-1 items-end justify-center">
+          <Image
+            src="/setup-pepo.png"
+            alt="Mi escritorio, visto desde atrás"
+            width={1024}
+            height={1024}
+            priority
+            // object-contain + alto explícito (no max-h/h-auto): el preflight de
+            // Tailwind pone height:auto en todo <img>, que compite con max-h y
+            // termina estirando la imagen. Con una caja de tamaño fijo real,
+            // object-contain escala el contenido sin deformarlo.
+            className="h-[65vh] w-full max-w-4xl object-contain object-bottom sm:h-[72vh] sm:max-w-5xl"
+          />
         </div>
 
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute bottom-10 z-20 text-xs uppercase tracking-[0.3em] text-white/30"
+          className="absolute bottom-10 z-50 text-xs uppercase tracking-[0.3em] text-white/30"
         >
           Scroll
         </motion.span>
