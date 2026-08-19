@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import type { MouseEvent } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform, type Variants } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 import MagneticButton from '@/components/MagneticButton';
@@ -51,9 +52,10 @@ export default function Home() {
     <>
       <section
         ref={heroRef}
-        className="relative flex h-screen flex-col items-center justify-center px-6 text-center"
+        className="relative flex min-h-screen flex-col items-center overflow-hidden px-6 pt-28 text-center sm:pt-32"
       >
-        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="flex flex-col items-center">
+        {/* Capa de contenido (arriba de todo): título, subtítulo, CTA */}
+        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative z-20 flex flex-col items-center">
           <motion.h1
             variants={titleContainer}
             initial="hidden"
@@ -82,11 +84,29 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
+        {/* Capa media: el render del escritorio, anclado abajo y centrado.
+            La capa de fondo (RainyWindow/DustyMorning vía BackgroundScene,
+            fixed en el layout raíz) queda detrás de esta sección porque no
+            tiene bg propio, y se filtra por el hueco transparente del
+            monitor gracias al canal alfa del PNG. Sin interactividad todavía
+            (pointer-events-none) — eso viene en el próximo paso. */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex justify-center">
+          <div className="relative h-[48vh] w-full max-w-3xl sm:h-[58vh] lg:h-[70vh]">
+            <Image
+              src="/setup-pepo.png"
+              alt="Mi escritorio, visto desde atrás"
+              fill
+              priority
+              className="object-contain object-bottom"
+            />
+          </div>
+        </div>
+
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute bottom-10 text-xs uppercase tracking-[0.3em] text-white/30"
+          className="absolute bottom-10 z-20 text-xs uppercase tracking-[0.3em] text-white/30"
         >
           Scroll
         </motion.span>
