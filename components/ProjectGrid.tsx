@@ -90,7 +90,7 @@ function ProjectCard({
     mouseY.set(clientY - top);
   }
 
-  const glow = useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, rgba(255,255,255,0.35), transparent 80%)`;
+  const glow = useMotionTemplate`radial-gradient(200px circle at ${mouseX}px ${mouseY}px, var(--card-glow), transparent 80%)`;
 
   return (
     <motion.div
@@ -114,7 +114,7 @@ function ProjectCard({
 
       <motion.div
         layout
-        className={`relative flex h-full w-full flex-col rounded-[calc(1.5rem-1px)] bg-[#111114] p-8 ${isExpanded ? 'min-h-[460px]' : 'min-h-[220px]'}`}
+        className={`relative flex h-full w-full flex-col rounded-[calc(1.5rem-1px)] bg-[var(--card-bg)] p-8 ${isExpanded ? 'min-h-[460px]' : 'min-h-[220px]'}`}
       >
         {isExpanded && (
           <button
@@ -124,7 +124,7 @@ function ProjectCard({
               onToggle();
             }}
             aria-label="Cerrar"
-            className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/50 transition-colors hover:border-white/30 hover:text-white sm:right-8 sm:top-8"
+            className="absolute right-6 top-6 flex h-9 w-9 items-center justify-center rounded-full border border-[var(--card-border)] text-white/50 transition-colors hover:border-white/30 hover:text-white sm:right-8 sm:top-8"
           >
             ✕
           </button>
@@ -144,6 +144,7 @@ function ProjectCard({
         <AnimatePresence mode="popLayout">
           {isExpanded && (
             <motion.div
+              layout
               key="expanded-content"
               variants={expandedContentVariants}
               initial="hidden"
@@ -152,7 +153,7 @@ function ProjectCard({
               className="mt-6 grid flex-1 grid-cols-1 gap-8 md:grid-cols-2"
             >
               {/* Zona de Información */}
-              <div className="flex flex-col">
+              <motion.div layout className="flex flex-col">
                 <h3 className="text-2xl font-medium text-white sm:text-3xl">{project.title}</h3>
                 <p className="mt-4 max-w-md text-base leading-relaxed text-white/60 sm:text-lg">
                   {project.description ?? DEFAULT_DESCRIPTION}
@@ -161,16 +162,16 @@ function ProjectCard({
                   {(project.stack ?? DEFAULT_STACK).map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70"
+                      className="rounded-full border border-[var(--card-border)] bg-[var(--card-surface)] px-3 py-1 text-xs font-medium text-white/70"
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
               {/* Zona Visual / Micro-Demo */}
-              <div className="min-h-[200px] rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+              <motion.div layout className="min-h-[200px] rounded-2xl border border-[var(--card-border)] bg-[var(--card-surface-soft)] p-4">
                 {project.id === 'ecosistema-clinico' ? (
                   <ProjectShowcase />
                 ) : (
@@ -178,7 +179,7 @@ function ProjectCard({
                     <span className="text-xs uppercase tracking-[0.2em] text-white/30">Micro-demo próximamente</span>
                   </div>
                 )}
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>

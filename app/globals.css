@@ -4,6 +4,26 @@
   --font-sans: var(--font-inter);
 }
 
+/* Tokens de superficie de las tarjetas del Bento Grid. Se referencian desde
+   ProjectGrid.tsx como bg-[var(--card-bg)] etc., así que el fondo, el borde
+   y hasta el glow del hover (que se arma en JS con useMotionTemplate) se
+   resuelven solos al cambiar de tema — no hace falta leer el theme ahí. */
+:root {
+  --card-bg: #111114;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-surface: rgba(255, 255, 255, 0.05);
+  --card-surface-soft: rgba(255, 255, 255, 0.04);
+  --card-glow: rgba(255, 255, 255, 0.35);
+}
+
+:root.light {
+  --card-bg: #fdfbf7;
+  --card-border: rgba(15, 23, 42, 0.08);
+  --card-surface: rgba(15, 23, 42, 0.04);
+  --card-surface-soft: rgba(15, 23, 42, 0.03);
+  --card-glow: rgba(15, 23, 42, 0.12);
+}
+
 /* Modo claro: el resto de los componentes está hardcodeado en blanco
    (pensado solo para el fondo oscuro), así que acá pisamos esos colores
    de forma centralizada en vez de tocar dark:/light: variant por variant
@@ -33,4 +53,8 @@
 :root.light .text-white\/30,
 :root.light .text-white\/25 {
   color: #64748b; /* slate-500, para la jerarquía más tenue */
+}
+
+:root.light .hover\:border-white\/30:hover {
+  border-color: rgba(15, 23, 42, 0.25);
 }
